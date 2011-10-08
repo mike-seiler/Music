@@ -10,9 +10,9 @@ from pygame import sndarray, mixer
 mixer.init()
 
 def autocorr(x,label):
-	tmp = scipy.fft(x)
-	returnme =  numpy.abs(tmp)[0:len(tmp)/2-1]
+	returnme = numpy.fft.fftn(x)
 	print label,returnme.argmax()
+	return returnme
 	vals = {}
 	vals[0] = returnme[returnme.argmax()]
 	returnme[returnme.argmax()] = 0
@@ -27,16 +27,11 @@ def print_max(filename):
 	NpointMultiplier = 2.0
 	new_xp =[(float(x) / NpointMultiplier) for x in range(int(NpointMultiplier*len(sndArray)))] 
 	old_xp = [x for x in range(len(sndArray))]
-	
-
 	snds = numpy.array(range(len(sndArray)))
 	i = 0
 	for snd in sndArray:
 		snds[i] = snd.mean()
 		i+=1
-
-
-
 	autocorr(snds,filename.split('.')[0]+' not interp')
 	snds = numpy.interp(new_xp, old_xp, snds,0,0)
 	autocorr(snds,filename.split('.')[0])
@@ -45,12 +40,6 @@ def print_max(filename):
 	t = matplotlib.pyplot.plot(x,plotme)
 	print t
 	matplotlib.pyplot.savefig('test.png')
-
-	#import pylab
-	#pylab.plot(autocorr(snds,filename.split('.')[0]))
-	#pylab.show()
-
-
 
 
 #print_max('440.wav')
